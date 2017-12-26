@@ -102,7 +102,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.condingapi.file.local.server.ServerApplication</mainClass>
+                            <mainClass>com.codingapi.file.local.server.ServerApplication</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>

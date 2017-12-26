@@ -93,7 +93,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.condingapi.file.fastdfs.server.ServerApplication</mainClass>
+                            <mainClass>com.codingapi.file.fastdfs.server.ServerApplication</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
