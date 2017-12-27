@@ -1,7 +1,6 @@
 package com.codingapi.file.local.server.utils;
 
 import com.codingapi.file.local.server.model.ImageWH;
-import com.lorne.core.framework.exception.ParamException;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
