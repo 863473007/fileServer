@@ -10,11 +10,23 @@ public class LocalFileConfig {
      */
     private String fileServerPath;
 
+
+    private String fileDownloadUrl;
+
     public String getFileServerPath() {
         return fileServerPath;
     }
 
     public void setFileServerPath(String fileServerPath) {
         this.fileServerPath = fileServerPath;
+    }
+
+
+    public String getFileDownloadUrl() {
+        return fileDownloadUrl;
+    }
+
+    public void setFileDownloadUrl(String fileDownloadUrl) {
+        this.fileDownloadUrl = fileDownloadUrl;
     }
 }

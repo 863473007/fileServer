@@ -1,5 +1,6 @@
 package com.codingapi.file.local.server.service;
 
+import com.codingapi.file.local.server.model.FileServerModel;
 import com.lorne.core.framework.exception.ServiceException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,13 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface UploadService {
 
-    String uploadFile(String groupName,MultipartFile file) throws ServiceException;
+    FileServerModel uploadFile(MultipartFile file) throws ServiceException;
 
-    boolean removeFile(String fileName) throws ServiceException;
+    boolean removeFile(String fileName, int flag) throws ServiceException;
 
     String uploadImage(String groupName, String cutSize, MultipartFile file) throws ServiceException;
 
     boolean cutImage(String fileName, String cutSize)throws ServiceException;
 
-    boolean removeFiles(String fileName) throws ServiceException;
 }

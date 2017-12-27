@@ -15,10 +15,15 @@ public class LocalFileConfigConfiguration {
     @Value("${file.server.path}")
     private String fileServerPath;
 
+    @Value("${file.download.url}")
+    private String fileDownloadUrl;
+
+
     @Bean
     public LocalFileConfig localFileConfig(){
         LocalFileConfig localFileConfig = new LocalFileConfig();
         localFileConfig.setFileServerPath(fileServerPath);
+        localFileConfig.setFileDownloadUrl(fileDownloadUrl);
         return localFileConfig;
     }
 }

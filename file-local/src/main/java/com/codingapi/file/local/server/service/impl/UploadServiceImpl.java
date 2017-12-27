@@ -1,12 +1,15 @@
 package com.codingapi.file.local.server.service.impl;
 
 import com.codingapi.file.local.server.config.LocalFileConfig;
+import com.codingapi.file.local.server.model.FileServerModel;
 import com.codingapi.file.local.server.model.ImageWH;
 import com.codingapi.file.local.server.service.FileValidateService;
 import com.codingapi.file.local.server.service.UploadService;
+import com.codingapi.file.local.server.utils.FileServerUtils;
 import com.lorne.core.framework.exception.ParamException;
 import com.lorne.core.framework.exception.ServiceException;
 import com.lorne.core.framework.utils.KidUtils;
+import com.lorne.core.framework.utils.encode.MD5Util;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -36,9 +39,8 @@ public class UploadServiceImpl implements UploadService {
     private LocalFileConfig localFileConfig;
 
 
-
     @Override
-    public String uploadFile(String groupName, MultipartFile file) throws ServiceException {
+    public FileServerModel uploadFile(MultipartFile file) throws ServiceException {
 
         if (file.getSize() <= 0) {
             throw new ParamException("file is null.");
@@ -47,41 +49,84 @@ public class UploadServiceImpl implements UploadService {
         fileValidateService.validateFile(file);
 
         try {
-            String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+            String fileName = file.getOriginalFilename();
+
+            String ext = FilenameUtils.getExtension(fileName);
+
+            String baseName =  FilenameUtils.getBaseName(fileName);
 
             String serverPath = localFileConfig.getFileServerPath();
 
-            String fileName = file.getOriginalFilename();
+            String fileNamePath = MD5Util.md5(baseName.getBytes());
 
-            File uploadFile = new File(serverPath+"/"+fileName+"."+ext);
+            String filePath = "/"+fileNamePath+"/"+baseName+"."+ext;
+
+            File uploadFile = new File(serverPath+filePath);
 
             FileUtils.copyInputStreamToFile(file.getInputStream(),uploadFile);
 
-            return uploadFile.getPath();
+            FileServerModel fileServerModel = new FileServerModel();
+            fileServerModel.setPath(filePath);
+            fileServerModel.setUrl(localFileConfig.getFileDownloadUrl()+filePath);
+
+            return fileServerModel;
+
         } catch (Exception e) {
             throw new ServiceException(e);
         }
     }
 
 
-    @Override
-    public boolean removeFile(String fileName) throws ServiceException {
 
-        if(StringUtils.isEmpty(fileName)){
-            throw new ParamException("fileName is null");
+    @Override
+    public boolean removeFile(String filePath, int flag) throws ServiceException {
+
+        if(StringUtils.isEmpty(filePath)){
+            throw new ParamException("filePath is null");
         }
 
         String serverPath = localFileConfig.getFileServerPath();
 
-        File file = new File(serverPath+"/"+fileName);
+        File file = new File(serverPath+"/"+filePath);
 
-        if(file.exists()){
-            file.delete();
-            return true;
+        if(!file.exists()){
+            throw new ParamException("file not exists");
         }
 
-        return false;
+        boolean isCutFile = FileServerUtils.isCutImgName(file.getName());
+
+        String baseName =  FilenameUtils.getBaseName(file.getName());
+
+        if(isCutFile){
+            baseName = baseName.substring(0,baseName.lastIndexOf("_"));
+        }
+
+        if(!file.getParent().endsWith(MD5Util.md5(baseName.getBytes()))){
+            throw new ParamException("file md5 val error");
+        }
+
+        if(flag==1){
+            try {
+                FileUtils.deleteDirectory(file.getParentFile());
+            } catch (IOException e) {
+                throw new ParamException("delete fileName group error.");
+            }
+        }else {
+            file.delete();
+
+            int listLength = file.getParentFile().list().length;
+            if(listLength==0){
+                try {
+                    FileUtils.deleteDirectory(file.getParentFile());
+                } catch (IOException e) {
+                    throw new ParamException("delete fileName group error.");
+                }
+            }
+        }
+
+        return true;
     }
+
 
 
 
@@ -199,21 +244,4 @@ public class UploadServiceImpl implements UploadService {
         return true;
     }
 
-
-    @Override
-    public boolean removeFiles(String fileName) throws ServiceException {
-
-        if(StringUtils.isEmpty(fileName)){
-            throw new ParamException("fileName is null");
-        }
-
-        String serverPath = localFileConfig.getFileServerPath();
-
-        File file = new File(serverPath+"/"+fileName);
-
-
-
-
-        return true;
-    }
 }
