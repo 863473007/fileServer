@@ -10,8 +10,19 @@ public class LocalFileConfig {
      */
     private String fileServerPath;
 
-
     private String fileDownloadUrl;
+
+    private String defaultCutSize;
+
+    private String fileValidateType;
+
+    public String getFileValidateType() {
+        return fileValidateType;
+    }
+
+    public void setFileValidateType(String fileValidateType) {
+        this.fileValidateType = fileValidateType;
+    }
 
     public String getFileServerPath() {
         return fileServerPath;
@@ -28,5 +39,13 @@ public class LocalFileConfig {
 
     public void setFileDownloadUrl(String fileDownloadUrl) {
         this.fileDownloadUrl = fileDownloadUrl;
+    }
+
+    public String getDefaultCutSize() {
+        return defaultCutSize;
+    }
+
+    public void setDefaultCutSize(String defaultCutSize) {
+        this.defaultCutSize = defaultCutSize;
     }
 }

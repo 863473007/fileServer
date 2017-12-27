@@ -12,18 +12,25 @@ import org.springframework.context.annotation.Configuration;
 public class LocalFileConfigConfiguration {
 
 
-    @Value("${file.server.path}")
+    @Value("${file.config.server.path}")
     private String fileServerPath;
 
-    @Value("${file.download.url}")
+    @Value("${file.config.download.url}")
     private String fileDownloadUrl;
 
+    @Value("${file.config.default.cutSize}")
+    private String fileDefaultCutSize;
+
+    @Value("${file.config.validate.type}")
+    private String fileValidateType;
 
     @Bean
     public LocalFileConfig localFileConfig(){
         LocalFileConfig localFileConfig = new LocalFileConfig();
         localFileConfig.setFileServerPath(fileServerPath);
         localFileConfig.setFileDownloadUrl(fileDownloadUrl);
+        localFileConfig.setFileValidateType(fileValidateType);
+        localFileConfig.setDefaultCutSize(fileDefaultCutSize);
         return localFileConfig;
     }
 }
